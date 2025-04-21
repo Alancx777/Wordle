@@ -14,45 +14,47 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Image;
 
+import Model.Keyboard;
 
 public class View {
     private JLabel[][] celdas;
-    private JFrame     ventana;
-    private JPanel     panelTeclado, panelCeldas, lettersPanel;
+    private JFrame ventana;
+    private JPanel panelTeclado, panelCeldas, lettersPanel;
+    private Keyboard teclado;
 
-    public View(){
-        this.celdas       = new JLabel[6][5];
+    public View() {
+        this.celdas = new JLabel[6][5];
         this.panelTeclado = new JPanel();
-        this.panelCeldas  = new JPanel();
-        this.ventana      = new JFrame();
+        this.panelCeldas = new JPanel();
+        this.ventana = new JFrame();
+        this.teclado = new Keyboard();
     }
 
-    public void confi(){
-        //Configuración de la ventana
+    public void confi() {
+        // Configuración de la ventana
         ventana.setTitle("Wordle");
         ventana.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        ventana.setSize(600,650);
+        ventana.setSize(600, 650);
         ventana.setLayout(new BorderLayout()); // Nos permitira acomodar los paneles con NOTH y SOUTH
         ventana.getContentPane().setBackground(Color.BLACK);
         ventana.setResizable(false);
         ventana.setLocationRelativeTo(null);
 
-        //Configuración del panel de la Celda
-        panelCeldas.setLayout(new GridLayout(6,5,5,5));
+        // Configuración del panel de la Celda
+        panelCeldas.setLayout(new GridLayout(6, 5, 5, 5));
         panelCeldas.setBackground(new Color(30, 30, 30));
-        panelCeldas.setBorder(BorderFactory.createEmptyBorder(20,20,20,20));
+        panelCeldas.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
-        //Configuración de las Etiquetas que almaceneran las letras
-        for(int x = 0; x < 6; x++){
-            for(int y = 0; y < 5; y++){
-                JLabel cuad = new JLabel("",SwingConstants.CENTER); //SwingConstants.CENTER -> Centra el contenido 
+        // Configuración de las Etiquetas que almaceneran las letras
+        for (int x = 0; x < 6; x++) {
+            for (int y = 0; y < 5; y++) {
+                JLabel cuad = new JLabel("", SwingConstants.CENTER); // SwingConstants.CENTER -> Centra el contenido
                 cuad.setPreferredSize(new Dimension(60, 60));
                 cuad.setOpaque(true);
                 cuad.setBackground(Color.WHITE);
                 cuad.setForeground(Color.BLACK);
                 cuad.setFont(new Font("Arial", Font.BOLD, 24));
                 cuad.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
-
 
                 panelCeldas.add(cuad);
                 celdas[x][y] = cuad;
@@ -65,46 +67,49 @@ public class View {
 
     }
 
-    public void armar(){
-        ventana.add(panelCeldas,BorderLayout.CENTER);
-        ventana.add(panelTeclado,BorderLayout.SOUTH);
+    public void armar() {
+        ventana.add(panelCeldas, BorderLayout.CENTER);
+        ventana.add(panelTeclado, BorderLayout.SOUTH);
     }
 
-    public void lanzar(){
+    public void lanzar() {
         crearTeclado();
         ventana.setVisible(true);
     }
 
-    public void run(){
+    public void run() {
         confi();
         armar();
         lanzar();
     }
 
-    private void crearTeclado(){
-        String [] letters = {"QWERTYUIOP", "ASDFGHJKL", "ZXCVBNM" };
-        
-         for (int i = 0; i < letters.length; i++) {
+    private void crearTeclado() {
+        String[] letters = teclado.getLayout();
+
+
+        for (int i = 0; i < letters.length; i++) {
             lettersPanel = new JPanel();
             lettersPanel.setBackground(new Color(245, 245, 245));
             lettersPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 8, 5));
 
             if (i == 2) {
                 // Botón ENTER
-                JButton enterButton = crearButton("",new Color(100, 149, 237));
-                enterButton.setIcon(ajustarTamanio(new ImageIcon("C:\\Users\\Alan0\\IdeaProjects\\WordleStatement\\src\\View\\Recursos\\Enter.png")));
+                JButton enterButton = crearButton("", new Color(100, 149, 237));
+                enterButton.setIcon(ajustarTamanio(new ImageIcon(
+                        "C:\\Users\\Alan0\\IdeaProjects\\WordleStatement\\src\\View\\Recursos\\Enter.png")));
                 lettersPanel.add(enterButton);
             }
 
-            for (char c : letters[i].toCharArray()) {
-                JButton letterButton = crearButton(String.valueOf(c),new Color(230, 230, 230));
+            for (String c : letters[i].split(",")) {
+                JButton letterButton = crearButton(c, new Color(230, 230, 230));
                 lettersPanel.add(letterButton);
             }
 
             if (i == 2) {
                 // Botón BORRAR
-                JButton deleteButton = crearButton("",new Color(220, 20, 60));
-                deleteButton.setIcon(ajustarTamanio(new ImageIcon("C:\\Users\\Alan0\\IdeaProjects\\WordleStatement\\src\\View\\Recursos\\Delete.png")));
+                JButton deleteButton = crearButton("", new Color(220, 20, 60));
+                deleteButton.setIcon(ajustarTamanio(new ImageIcon(
+                        "C:\\Users\\Alan0\\IdeaProjects\\WordleStatement\\src\\View\\Recursos\\Delete.png")));
                 lettersPanel.add(deleteButton);
             }
 
@@ -124,7 +129,7 @@ public class View {
         return boton;
     }
 
-    public ImageIcon ajustarTamanio(ImageIcon x){
+    public ImageIcon ajustarTamanio(ImageIcon x) {
         Image y = x.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
         return new ImageIcon(y);
     }
